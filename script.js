@@ -1,43 +1,78 @@
-const wrapper = document.getElementById('scroll-wrapper');
-const containerWidth = 600;
-const iconNormalSize = 50;
-const iconLargeSize = 65;
-const gap = 20;
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-// Duplicate icons for smooth infinite scroll
-wrapper.innerHTML += wrapper.innerHTML;
+let box = 20;
+let score = 0;
 
-let posX = 0;
-const speed = 1; // pixels per frame
+let snake = [];
+snake[0] = { x: 9 * box, y: 10 * box };
 
-function animate() {
-  posX -= speed;
-  if (posX <= -wrapper.scrollWidth / 2) {
-    posX = 0;
+let food = {
+  x: Math.floor(Math.random() * 19) * box,
+  y: Math.floor(Math.random() * 19) * box
+};
+
+let direction;
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+  else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+  else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+  else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+});
+
+function draw() {
+  ctx.fillStyle = "#222";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < snake.length; i++) {
+    ctx.fillStyle = i === 0 ? "#0f0" : "#3f3";
+    ctx.fillRect(snake[i].x, snake[i].y, box, box);
   }
-  wrapper.style.transform = `translateX(${posX}px) translateY(-50%)`;
 
-  // Calculate center position of container
-  const containerCenter = containerWidth / 2;
+  ctx.fillStyle = "#f00";
+  ctx.fillRect(food.x, food.y, box, box);
 
-  // For each icon, check distance from container center and scale accordingly
-  const icons = wrapper.querySelectorAll('img');
-  icons.forEach(icon => {
-    const iconRect = icon.getBoundingClientRect();
-    const iconCenter = iconRect.left + iconRect.width / 2;
-    const dist = Math.abs(containerCenter - iconCenter);
+  let headX = snake[0].x;
+  let headY = snake[0].y;
 
-    // Scale based on distance: if within 50px of center, scale up
-    if (dist < 50) {
-      icon.style.width = `${iconLargeSize}px`;
-      icon.style.height = `${iconLargeSize}px`;
-    } else {
-      icon.style.width = `${iconNormalSize}px`;
-      icon.style.height = `${iconNormalSize}px`;
-    }
-  });
+  if (direction === "LEFT") headX -= box;
+  if (direction === "UP") headY -= box;
+  if (direction === "RIGHT") headX += box;
+  if (direction === "DOWN") headY += box;
 
-  requestAnimationFrame(animate);
+  if (headX === food.x && headY === food.y) {
+    score++;
+    food = {
+      x: Math.floor(Math.random() * 19) * box,
+      y: Math.floor(Math.random() * 19) * box
+    };
+  } else {
+    snake.pop();
+  }
+
+  let newHead = { x: headX, y: headY };
+
+  if (
+    headX < 0 || headX >= canvas.width ||
+    headY < 0 || headY >= canvas.height ||
+    collision(newHead, snake)
+  ) {
+    clearInterval(game);
+    alert("Game Over. Score: " + score);
+  }
+
+  snake.unshift(newHead);
+  document.getElementById("score").innerText = score;
 }
 
-animate();
+function collision(head, array) {
+  for (let i = 0; i < array.length; i++) {
+    if (head.x === array[i].x && head.y === array[i].y) {
+      return true;
+    }
+  }
+  return false;
+}
+
+let game = setInterval(draw, 100);
