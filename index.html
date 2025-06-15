@@ -3,86 +3,24 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Simple Snake Game</title>
-<style>
-  body {
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    color: white;
-    font-family: Arial, sans-serif;
-  }
-  canvas {
-    background: #111;
-    display: block;
-    border: 2px solid #0f0;
-  }
-</style>
+<title>Scrolling Tech Icons</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<canvas id="game" width="400" height="400"></canvas>
-<script>
-  const canvas = document.getElementById('game');
-  const ctx = canvas.getContext('2d');
-  const grid = 20;
-  let count = 0;
-  let snake = [{ x: 160, y: 160 }];
-  let direction = { x: grid, y: 0 };
-  let food = {
-    x: Math.floor(Math.random() * (canvas.width / grid)) * grid,
-    y: Math.floor(Math.random() * (canvas.height / grid)) * grid,
-  };
 
-  function gameLoop() {
-    requestAnimationFrame(gameLoop);
-    if (++count < 6) return;
-    count = 0;
-    const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
-    if (head.x >= canvas.width) head.x = 0;
-    else if (head.x < 0) head.x = canvas.width - grid;
-    if (head.y >= canvas.height) head.y = 0;
-    else if (head.y < 0) head.y = canvas.height - grid;
-    for (let i = 0; i < snake.length; i++) {
-      if (head.x === snake[i].x && head.y === snake[i].y) {
-        snake = [{ x: 160, y: 160 }];
-        direction = { x: grid, y: 0 };
-        food = {
-          x: Math.floor(Math.random() * (canvas.width / grid)) * grid,
-          y: Math.floor(Math.random() * (canvas.height / grid)) * grid,
-        };
-        alert('Game Over! Press OK to restart.');
-        return;
-      }
-    }
-    snake.unshift(head);
-    if (head.x === food.x && head.y === food.y) {
-      food = {
-        x: Math.floor(Math.random() * (canvas.width / grid)) * grid,
-        y: Math.floor(Math.random() * (canvas.height / grid)) * grid,
-      };
-    } else {
-      snake.pop();
-    }
-    ctx.fillStyle = '#111';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#f00';
-    ctx.fillRect(food.x, food.y, grid - 1, grid - 1);
-    ctx.fillStyle = '#0f0';
-    snake.forEach(segment => ctx.fillRect(segment.x, segment.y, grid - 1, grid - 1));
-  }
+<div class="container">
+  <div class="scroll-wrapper" id="scroll-wrapper">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" />
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C" />
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" />
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML" />
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS" />
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" alt="C#" />
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Arduino" />
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux" />
+  </div>
+</div>
 
-  document.addEventListener('keydown', e => {
-    const key = e.key;
-    if (key === 'ArrowLeft' && direction.x === 0) direction = { x: -grid, y: 0 };
-    else if (key === 'ArrowUp' && direction.y === 0) direction = { x: 0, y: -grid };
-    else if (key === 'ArrowRight' && direction.x === 0) direction = { x: grid, y: 0 };
-    else if (key === 'ArrowDown' && direction.y === 0) direction = { x: 0, y: grid };
-  });
-
-  requestAnimationFrame(gameLoop);
-</script>
+<script src="script.js"></script>
 </body>
 </html>

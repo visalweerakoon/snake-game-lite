@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 600px;
+  height: 100px;
+  background: #111;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.scroll-wrapper {
+  display: flex;
+  gap: 20px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  will-change: transform;
+}
+
+.scroll-wrapper img {
+  width: 50px;
+  height: 50px;
+  transition: width 0.3s ease, height 0.3s ease;
+  cursor: default;
+}
